@@ -89,7 +89,7 @@ class MumbleBot:
         if self.playing:
             self.add_to_queue(video_id, sender)
         elif not self.playing and self.queue:
-            self.add_to_queue(self, video_id, sender)
+            self.add_to_queue(video_id, sender)
             self.play_from_queue()
         else:
             self.play_music(youtube.get_audio_stream(video_id))
