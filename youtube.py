@@ -4,7 +4,7 @@ import pafy
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials as SAC
 
-CLIENT_SECRETS_FILE = 'service_client.json'
+CLIENT_SECRETS_FILE = 'config/service_client.json'
 SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
 API_SERVICE_NAME = 'youtube'
 API_VERSION = 'v3'
