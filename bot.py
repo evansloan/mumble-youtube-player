@@ -79,7 +79,7 @@ class MumbleBot:
         channel.send_text_message(message)
 
     def set_comment(self, song):
-        header = f'<h1 style="color: red; font-size: 16;">Now playing: {song}</h1><br>'
+        header = f'<h1 style="color: red; font-size: 16px;">Now playing: {song}</h1><br>'
         self.me.comment(header)
 
     def load_youtube_audio(self, sender, video_id=None, video_title=None):
@@ -181,7 +181,7 @@ class MumbleBot:
                         self.mumble.sound_output.add_sound(audioop.mul(raw_music, 2, self.volume))
                     else:
                         if len(self.queue) > 0:
-                            self.play_from_queue(self)
+                            self.play_from_queue()
                         else:
                             self.playing = False
                             self.set_comment('')
