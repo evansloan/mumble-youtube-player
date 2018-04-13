@@ -1,4 +1,4 @@
-import bot
+from bot import MumbleBot
 
 if __name__ == '__main__':
-    mumble_bot = bot.MumbleBot()
+    mumble_bot = MumbleBot()
