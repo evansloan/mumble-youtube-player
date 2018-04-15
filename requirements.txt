@@ -21,3 +21,5 @@ six==1.11.0
 uritemplate==3.0.0
 urllib3==1.22
 youtube-dl==2017.12.31
+
+git+git://github.com/evansloan082/pymumble
