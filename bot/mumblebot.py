@@ -1,9 +1,9 @@
 import audioop
 import configparser
+import logging
 import os
 import subprocess
 import time
-from datetime import datetime
 
 from pymumble import pymumble
 
@@ -12,8 +12,22 @@ class MumbleBot:
     commands = {}
 
     def __init__(self):
+        self._base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+
+        self.logger = logging.getLogger('mumble-music')
+        self.logger.setLevel(logging.INFO)
+        fh = logging.FileHandler(os.path.join(self._base_dir, 'logs/error.log'))
+        fh.setLevel(logging.ERROR)
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.INFO)
+        formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(module)s.py - line %(lineno)d: %(message)s')
+        fh.setFormatter(formatter)
+        ch.setFormatter(formatter)
+        self.logger.addHandler(fh)
+        self.logger.addHandler(ch)
+
         self.config = configparser.ConfigParser(interpolation=None)
-        self.config.read(os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__,))), 'config/config.ini'))
+        self.config.read(os.path.join(self._base_dir, 'config/config.ini'))
 
         self.host = self.config.get('server-info', 'host')
         self.port = self.config.getint('server-info', 'port')
@@ -25,7 +39,6 @@ class MumbleBot:
         self.playing = False
         self.queue = []
         self.volume = 0.5
-        self.votes = 0
 
         self.mumble = pymumble.Mumble(self.host, user=self.name, port=self.port, certfile=self.cert, reconnect=True)
         self.mumble.callbacks.set_callback('text_received', self.message_recieved)
@@ -60,8 +73,7 @@ class MumbleBot:
                 command_args = ' '.join(message[1:]).strip()
 
             ctx = Context(command_args, sender, self)
-            timestamp = datetime.now()
-            print(f'{timestamp}: {command} {command_args} - {sender.name}')
+            self.logger.info(f'{command} {command_args} - {sender.name}')
             try:
                 self.commands[command](ctx)
             except KeyError:
