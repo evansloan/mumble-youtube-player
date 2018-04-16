@@ -37,6 +37,7 @@ class MumbleBot:
 
         self.thread = None
         self.playing = False
+        self.song = None
         self.queue = []
         self.volume = 0.5
 
@@ -84,9 +85,9 @@ class MumbleBot:
             channel = self.mumble.channels[self.me.channel_id]
         channel.send_text_message(f'<br>{message}')
 
-    def set_comment(self, song):
-        comment = f'<h1 style="color: red; font-size: 18px;">Now playing: {song}</h1>'
-        comment += f'<h2 style="color: yellow; font-size: 16px;">Volume: {int(self.volume)}</h2>'
+    def set_comment(self):
+        comment = f'<h1 style="color: red; font-size: 18px;">Now playing: {self.song}</h1>'
+        comment += f'<h2 style="color: yellow; font-size: 16px;">Volume: {self.volume * 10}</h2>'
         with open(os.path.join(self._base_dir, 'bot/comment.html'), 'r') as f:
             comment += f.read()
         self.me.comment(comment)
@@ -106,7 +107,7 @@ class MumbleBot:
         stream = self.queue[0][1]
 
         self.play_music(stream, user)
-        self.set_comment(song=stream.title)
+        self.set_comment()
         del self.queue[0]
 
     def play_music(self, stream, user):
@@ -115,6 +116,7 @@ class MumbleBot:
         self.send(f'Now playing: <a href="{stream.video_url}">{stream.title}</a><br>'
                   f'Requested by: {user}<br>'
                   f'Duration: {stream.duration}')
+        self.song = stream.title
 
     # this is a mess
     def loop(self):
@@ -131,11 +133,13 @@ class MumbleBot:
                             self.play_from_queue()
                         else:
                             self.playing = False
-                            self.set_comment('')
+                            self.song = None
+                            self.set_comment()
                         time.sleep(0.01)
                 except AttributeError:
                     self.playing = False
-                    self.set_comment('')
+                    self.song = None
+                    self.set_comment()
             else:
                 time.sleep(1)
 

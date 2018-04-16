@@ -15,7 +15,7 @@ def load_youtube_audio(ctx):
         bot.play_from_queue()
     else:
         bot.play_music(stream, ctx.sender.name)
-        bot.set_comment(stream.title)
+        bot.set_comment()
 
 
 @MumbleBot.command('queue')
@@ -34,7 +34,8 @@ def stop(ctx):
     ctx.bot.playing = False
     ctx.bot.thread.kill()
     ctx.bot.thread = None
-    ctx.bot.set_comment('')
+    ctx.bot.song = None
+    ctx.bot.set_comment()
 
 
 @MumbleBot.command('skip')
@@ -60,6 +61,7 @@ def set_volume(ctx):
         ctx.bot.send(error)
         return
     ctx.bot.send(f'Volume is at {ctx.bot.volume * 10}')
+    ctx.bot.set_comment()
 
 
 @MumbleBot.command('move')
