@@ -5,7 +5,7 @@ import os
 import subprocess
 import time
 
-from pymumble import pymumble
+from pymumble import mumble
 
 
 class MumbleBot:
@@ -40,7 +40,7 @@ class MumbleBot:
         self.queue = []
         self.volume = 0.5
 
-        self.mumble = pymumble.Mumble(self.host, user=self.name, port=self.port, certfile=self.cert, reconnect=True)
+        self.mumble = mumble.Mumble(self.host, user=self.name, port=self.port, certfile=self.cert, reconnect=True)
         self.mumble.callbacks.set_callback('text_received', self.message_recieved)
 
         self.mumble.set_codec_profile('audio')
@@ -86,6 +86,8 @@ class MumbleBot:
 
     def set_comment(self, song):
         header = f'<h1 style="color: red; font-size: 16px;">Now playing: {song}</h1>'
+        with open(os.path.join(self._base_dir, 'bot/comment.html'), 'r') as f:
+            header += f.read()
         self.me.comment(header)
 
     def add_to_queue(self, stream, user):
