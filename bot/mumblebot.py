@@ -85,10 +85,11 @@ class MumbleBot:
         channel.send_text_message(f'<br>{message}')
 
     def set_comment(self, song):
-        header = f'<h1 style="color: red; font-size: 16px;">Now playing: {song}</h1>'
+        comment = f'<h1 style="color: red; font-size: 18px;">Now playing: {song}</h1>'
+        comment += f'<h2 style="color: yellow; font-size: 16px;>Volume: {int(self.volume)}</h2>'
         with open(os.path.join(self._base_dir, 'bot/comment.html'), 'r') as f:
-            header += f.read()
-        self.me.comment(header)
+            comment += f.read()
+        self.me.comment(comment)
 
     def add_to_queue(self, stream, user):
         for name, link in self.queue:
