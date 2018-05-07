@@ -58,12 +58,15 @@ class MumbleBot:
     @classmethod
     def command(cls, name, restricted=False):
         def wrapper(func):
-            cls.commands[name.lower()] = func
+            cls.commands[name.lower()] = {
+		'func': func,
+		'restricted': restricted,
+	    }
             return func
         return wrapper
 
     def message_recieved(self, text):
-        message = text.message
+        message = remove_html_markup(text.message)
         sender = self.mumble.users[text.actor]
 
         if message[0] == '!':
@@ -74,7 +77,7 @@ class MumbleBot:
                 command_args = ' '.join(message[1:]).strip()
 
             ctx = Context(command_args, sender, self)
-            self.logger.info(f'{command} {command_args} - {sender.name}')
+            self.logger.info(f'{command} {command_args} - {sender.name}')		
             try:
                 self.commands[command](ctx)
             except KeyError:
@@ -153,3 +156,20 @@ class Context:
         self.args = args
         self.sender = sender
         self.bot = bot
+
+
+def remove_html_markup(s):
+    tag = False
+    quote = False
+    out = ''
+  
+    for char in s:
+        if char == '<' and not quote:
+            tag = True
+        elif char == '>' and not quote:
+            tag = False
+        elif (char == '"' or char == "'") and tag:
+            quote = not quote
+        elif not tag:
+            out = out + char
+    return out
