@@ -7,6 +7,8 @@ import time
 
 from pymumble import mumble
 
+from bot import utils
+
 
 class MumbleBot:
     commands = {}
@@ -40,6 +42,7 @@ class MumbleBot:
         self.song = None
         self.queue = []
         self.volume = 0.5
+        self.locked = True
 
         self.mumble = mumble.Mumble(self.host, user=self.name, port=self.port, certfile=self.cert, reconnect=True)
         self.mumble.callbacks.set_callback('text_received', self.message_recieved)
@@ -59,14 +62,14 @@ class MumbleBot:
     def command(cls, name, restricted=False):
         def wrapper(func):
             cls.commands[name.lower()] = {
-		'func': func,
-		'restricted': restricted,
-	    }
+                'func': func,
+                'restricted': restricted,
+            }
             return func
         return wrapper
 
     def message_recieved(self, text):
-        message = remove_html_markup(text.message)
+        message = utils.remove_html_markup(text.message)
         sender = self.mumble.users[text.actor]
 
         if message[0] == '!':
@@ -77,9 +80,18 @@ class MumbleBot:
                 command_args = ' '.join(message[1:]).strip()
 
             ctx = Context(command_args, sender, self)
-            self.logger.info(f'{command} {command_args} - {sender.name}')		
+            self.logger.info(f'{command} {command_args} - {sender.name}')
+
             try:
-                self.commands[command](ctx)
+                if utils.is_ignored(sender.name):
+                    sender.send_message('<br>You are currently ignored and cannot use commands')
+                    return
+
+                if self.commands[command]['restricted'] and not utils.is_mod(sender.name):
+                    self.send('You must be a moderator to use this command')
+                    return
+
+                self.commands[command]['func'](ctx)
             except KeyError:
                 self.send(f'Command {command} does not exist')
 
@@ -156,20 +168,3 @@ class Context:
         self.args = args
         self.sender = sender
         self.bot = bot
-
-
-def remove_html_markup(s):
-    tag = False
-    quote = False
-    out = ''
-  
-    for char in s:
-        if char == '<' and not quote:
-            tag = True
-        elif char == '>' and not quote:
-            tag = False
-        elif (char == '"' or char == "'") and tag:
-            quote = not quote
-        elif not tag:
-            out = out + char
-    return out

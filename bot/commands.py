@@ -66,6 +66,9 @@ def set_volume(ctx):
 
 @MumbleBot.command('move')
 def move_users(ctx):
+    if ctx.bot.locked:
+        ctx.bot.send('I am currently locked to this channel')
+        return
     if ctx.args:
         if ctx.args.split()[0].lower() == 'all':
             # move all users in a channel to a specific channel
