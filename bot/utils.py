@@ -3,12 +3,6 @@ import sqlite3
 conn = sqlite3.connect('../users.db', check_same_thread=False)
 
 
-def create_db_tables():
-    c = conn.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS ignored (username text)')
-    c.execute('CREATE TABLE IF NOT EXISTS mods (username text)')
-
-
 def user_exists(username, bot):
     for k, user in bot.mumble.users.items():
         if user.name == username:
