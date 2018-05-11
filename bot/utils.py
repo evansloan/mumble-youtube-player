@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect('../users.db', check_same_thread=False)
+conn = sqlite3.connect('users.db', check_same_thread=False)
 
 
 def user_exists(username, bot):
