@@ -9,6 +9,13 @@ def create_db_tables():
     c.execute('CREATE TABLE IF NOT EXISTS mods (username text)')
 
 
+def user_exists(username, bot):
+    for k, user in bot.mumble.users.items():
+        if user.name == username:
+            return True
+    return False
+
+
 def is_mod(username):
     c = conn.cursor()
     if username in [x[0] for x in c.execute('SELECT * FROM mods')]:

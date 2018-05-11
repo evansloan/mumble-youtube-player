@@ -1,5 +1,10 @@
-from bot import youtube
+import sqlite3
+
+from bot import utils, youtube
 from bot.mumblebot import MumbleBot
+
+
+conn = sqlite3.connect('../users.db', check_same_thread=False)
 
 
 @MumbleBot.command('request')
@@ -67,6 +72,7 @@ def set_volume(ctx):
 @MumbleBot.command('move')
 def move_users(ctx):
     if ctx.bot.locked:
+        ctx.sender.send_message('<br>I am currently locked to this channel')
         ctx.bot.send('I am currently locked to this channel')
         return
     if ctx.args:
@@ -94,3 +100,31 @@ def lock(ctx):
         ctx.bot.send('I am now unlocked')
 
     ctx.bot.locked = is_locked
+
+
+@MumbleBot.command('mod', restricted=True)
+def mod(ctx):
+    c = conn.cursor()
+    if utils.is_mod(ctx.args):
+        ctx.bot.send(f'{ctx.args} is already a mod')
+    else:
+        if utils.user_exists(ctx.args, ctx.bot):
+            c.execute('INSERT INTO mods VALUES (?)', (ctx.args,))
+            conn.commit()
+            ctx.bot.send(f'{ctx.args} added as a mod')
+        else:
+            ctx.bot.send(f'Cannot find user {ctx.args}')
+
+
+@MumbleBot.command('ignore', restricted=True)
+def ignore(ctx):
+    c = conn.cursor()
+    if utils.user_exists(ctx.args, ctx.bot):
+        if not utils.is_ignored(ctx.args):
+            c.execute('INSERT INTO ignored VALUES (?)', (ctx.args,))
+            conn.commit()
+            ctx.bot.send(f'{ctx.args} ignored')
+        else:
+            ctx.bot.send(f'{ctx.args} is already ignored')
+    else:
+        ctx.bot.send(f'Cannot find user {ctx.args}')
