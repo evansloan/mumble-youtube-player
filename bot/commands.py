@@ -91,7 +91,7 @@ def move_users(ctx):
         ctx.bot.mumble.channels[ctx.sender.channel_id].move()
 
 
-@MumbleBot.command('lock')
+@MumbleBot.command('lock', restricted=True)
 def lock(ctx):
     is_locked = not ctx.bot.locked
     if is_locked:
