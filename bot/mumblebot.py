@@ -103,7 +103,7 @@ class MumbleBot:
     def set_comment(self):
         comment = f'<h1 style="color: red; font-size: 18px;">Now playing: {self.song}</h1>'
         comment += f'<h2 style="color: yellow; font-size: 16px;">Volume: {self.volume * 10}</h2>'
-        with open(os.path.join(self._base_dir, 'bot/comment.html'), 'r') as f:
+        with open(os.path.join(self._base_dir, 'config/comment.html'), 'r') as f:
             comment += f.read()
         self.me.comment(comment)
 
