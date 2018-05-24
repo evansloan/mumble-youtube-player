@@ -1,19 +1,25 @@
-Clone the repo:
-```git clone --recursive https://github.com/evansloan082/mumble-youtube-player.git ```
+# mumble-youtube-player
+A simple Mumble bot that takes song requests in the form of YouTube video names/URLs and plays them back through Mumble.
 
-Install requirements:
+Use `!request <song name/video URL>` to request a song.
+
+**Requirements**:
+ - Python >= 3.6.0
+ - FFMPEG
+
+**Clone the repo**:
+```git clone https://github.com/evansloan082/mumble-youtube-player.git ```
+
+**Install requirements**:
 ```pip install -r requirements.txt```
 
-Get Google Service Account Credentials:
-https://developers.google.com/identity/protocols/OAuth2ServiceAccount
+This project makes use of Google's YouTube data API and requires service account credentials in order to authenticate. More information on creating your own service account can be found [here](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount).
 
-Replace service_client.json with your own credentials. (Make sure it is still named service_client.json)
+Replace `config/service_client.json` with your own service account credentials. (Make sure the file is still named `service_client.json`)
 
-Modify config/config.ini as you see fit
+Modify `config/config.ini` to connect to the Mumble server of your choosing.
 
-Run the bot:
+[*Optional*] Replace `config/certfile.pem` with your own Mumble certificate if you would like to authenticate the bot.
+
+**Run the bot**:
 ```python main.py```
-
-Python 3.6 required
-
-Having trouble getting this to fetch songs with youtube-dl when using a virtual env on MacOS. Works fine with virtual env on ubuntu, not tested on Windows
