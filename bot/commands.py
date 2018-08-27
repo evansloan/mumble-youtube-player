@@ -8,7 +8,7 @@ conn = sqlite3.connect('users.db', check_same_thread=False)
 
 
 @MumbleBot.command('request')
-def load_youtube_audio(ctx):
+def request_song(ctx):
     video_id = youtube.get_video_id(ctx.args)
     stream = youtube.YTStream(video_id)
     bot = ctx.bot
