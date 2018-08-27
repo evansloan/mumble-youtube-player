@@ -42,7 +42,7 @@ class MumbleBot:
         self.song = None
         self.queue = []
         self.volume = 0.5
-        self.locked = True
+        self.locked = False
 
         self.mumble = mumble.Mumble(self.host, user=self.name, port=self.port, certfile=self.cert, reconnect=True)
         self.mumble.callbacks.set_callback('text_received', self.message_recieved)
