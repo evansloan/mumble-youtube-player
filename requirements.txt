@@ -11,7 +11,7 @@ oauth2client==4.1.2
 oauthlib==2.0.6
 opuslib==2.0.0
 pafy==0.5.3.1
-protobuf==3.5.1
+protobuf==3.15.0
 pyasn1==0.4.2
 pyasn1-modules==0.2.1
 requests==2.20.0
