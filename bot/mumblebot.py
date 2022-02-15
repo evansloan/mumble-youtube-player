@@ -135,7 +135,7 @@ class MumbleBot:
 
     # this is a mess
     def loop(self):
-        while self.mumble.isAlive():
+        while self.mumble.is_alive():
             if self.playing:
                 while self.mumble.sound_output.get_buffer_size() > 0.5 and self.playing:
                     time.sleep(0.01)
